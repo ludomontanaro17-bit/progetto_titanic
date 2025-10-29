@@ -38,3 +38,17 @@ class Preprocessor:
         self.train_set = pd.get_dummies(self.train_set, columns=['Embarked'], drop_first=True)
         self.test_set = pd.get_dummies(self.test_set, columns=['Embarked'], drop_first=True)
 
+    def transform(self, input_data):
+        # Preprocessare i dati in input come fatto per il train_set
+        input_data['Age'].fillna(input_data['Age'].median(), inplace=True)
+        input_data['Fare'].fillna(input_data['Fare'].median(), inplace=True)
+
+        input_data['Has_Cabin'] = input_data['Cabin'].notna().astype(int)
+        input_data.drop('Cabin', axis=1, inplace=True)
+
+        input_data['FamilySize'] = input_data['SibSp'] + input_data['Parch'] + 1
+        input_data['Sex'] = input_data['Sex'].map({'male': 0, 'female': 1})
+
+        input_data = pd.get_dummies(input_data, columns=['Embarked'], drop_first=True)
+
+        return input_data
